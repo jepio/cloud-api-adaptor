@@ -1,0 +1,1 @@
+az sig image-definition create -g jepio-coco-sig-rg --gallery-name cocopreview --gallery-image-definition ubuntu2204-caa-snp --publisher azurecore-linux --offer ubuntu-caa --sku 2204-snp-cvm --os-type Linux --os-state Generalized --hyper-v-generation V2 --location eastus --features SecurityType=ConfidentialVmSupported
