@@ -22,7 +22,7 @@ tools:
 git:
   attestation-agent:
     url: https://github.com/confidential-containers/attestation-agent
-    reference: v0.5.0
+    reference: v0.6.0
   kata-containers:
     url: https://github.com/kata-containers/kata-containers
     reference: CCv0
