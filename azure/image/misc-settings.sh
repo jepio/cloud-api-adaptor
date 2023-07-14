@@ -135,6 +135,13 @@ TLS_OPTIONS=-cert-file /etc/certificates/tls.crt -cert-key /etc/certificates/tls
 END
 fi
 
+mkdir -p /etc/systemd/system/attestation-agent.service.d
+cat <<END >/etc/systemd/system/attestation-agent.service.d/10-grpc.conf
+[Service]
+ExecStart=
+ExecStart=/usr/local/bin/attestation-agent.grpc --getresource_sock 127.0.0.1:50001
+END
+
 # Disable unnecessary systemd services
 
 case $PODVM_DISTRO in
