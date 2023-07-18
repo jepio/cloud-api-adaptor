@@ -151,12 +151,9 @@ case $PODVM_DISTRO in
         systemctl disable apt-daily.timer
         systemctl disable apt-daily-upgrade.timer
         systemctl disable apt-daily-upgrade.service
-        systemctl disable --now snapd.service
+        systemctl disable snapd.service
         systemctl disable snapd.seeded.service
         systemctl disable snap.lxd.activate.service
-
-        rm -rf /etc/systemd/system/snap* /var/lib/snapd
-        apt-get clean
         ;;
 esac
 
