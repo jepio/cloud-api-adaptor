@@ -126,7 +126,7 @@ $(ATTESTATION_AGENT_SRC):
 	cd "$(ATTESTATION_AGENT_SRC)" && git fetch --depth=1 origin "$(AA_VERSION)" && git checkout FETCH_HEAD
 
 $(ATTESTATION_AGENT): $(ATTESTATION_AGENT_SRC)
-	cd "$(ATTESTATION_AGENT_SRC)" && CC= ARCH=$(ARCH) $(MAKE) KBC="$(AA_KBC)" grpc=true LIBC="$(LIBC)"
+	cd "$(ATTESTATION_AGENT_SRC)" && CC= ARCH=$(ARCH) $(MAKE) KBC="$(AA_KBC)" ttrpc=true LIBC="$(LIBC)"
 	mkdir -p "$(@D)"
 	install --compare "$(ATTESTATION_AGENT_SRC)/target/$(RUST_TARGET)/release/attestation-agent" "$@"
 
