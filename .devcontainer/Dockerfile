@@ -10,6 +10,8 @@ RUN apt-get install -y \
     curl \
     gnupg \
     libclang-dev \
+    libdevmapper-dev \
+    libgpgme-dev \
     libprotobuf-dev \
     libssl-dev \
     make \
