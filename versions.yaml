@@ -25,7 +25,7 @@ git:
     reference: v0.7.0
   kata-containers:
     url: https://github.com/kata-containers/kata-containers
-    reference: CCv0
+    reference: CC-0.7.0
   cloud-api-adaptor:
     url: https://github.com/confidential-containers/cloud-api-adaptor
     reference: main
