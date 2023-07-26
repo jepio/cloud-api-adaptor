@@ -63,6 +63,7 @@ $(shell sed -i "s/\(aa_kbc_params = \)\"[^\"]*\"/\1\"${AA_KBC}::${KBC_URI}\"/g" 
 
 AGENT_PROTOCOL_FORWARDER_SRC = ../..
 
+KATA_CONTAINERS_REPO = ../../../kata-containers/
 KATA_AGENT_SRC = ../../../kata-containers/src/agent
 KATA_AGENT_BUILD_TYPE = release
 
@@ -100,7 +101,7 @@ define git_clone_repo_ref
 		cd "$(2)" && \
 		git init && \
 		git remote add origin "$(1)" && \
-		git fetch --depth=1 origin "$(3)" && \
+		git fetch --depth=1 --tags origin "$(3)" && \
 		git reset --hard FETCH_HEAD
 endef
 
@@ -110,11 +111,17 @@ $(AGENT_PROTOCOL_FORWARDER): force
 	cd "$(AGENT_PROTOCOL_FORWARDER_SRC)" && ARCH=$(DEB_ARCH) $(MAKE) agent-protocol-forwarder
 	install -D --compare "$(AGENT_PROTOCOL_FORWARDER_SRC)/agent-protocol-forwarder" "$@"
 
-$(KATA_AGENT): force $(STATIC_LIBSECCOMP)
+$(KATA_CONTAINERS_REPO): ../../versions.yaml
+	$(eval URL :=$(shell yq r -X $< git.kata-containers.url))
+	$(eval REF :=$(shell yq r -X $< git.kata-containers.reference))
+	$(call git_clone_repo_ref,$(URL),$@,$(REF))
+	git -C $@ fetch origin "$(REF)" && git -C $@ checkout FETCH_HEAD
+
+$(KATA_AGENT): force $(STATIC_LIBSECCOMP) $(KATA_CONTAINERS_REPO)
 	cd "$(KATA_AGENT_SRC)" && $(RUST_FLAGS) $(MAKE) BUILD_TYPE=$(KATA_AGENT_BUILD_TYPE) LIBSECCOMP_LINK_TYPE=static LIBSECCOMP_LIB_PATH=$(dir $(STATIC_LIBSECCOMP))
 	install -D --compare "$(KATA_AGENT_SRC)/target/$(RUST_TARGET)/$(KATA_AGENT_BUILD_TYPE)/$(@F)" "$@"
 
-$(STATIC_LIBSECCOMP):
+$(STATIC_LIBSECCOMP): $(KATA_CONTAINERS_REPO)
 	$(RUST_FLAGS) $(STATIC_LIBSECCOMP_BUILDER) $(STATIC_LIBSECCOMP_DIR)/kata-libseccomp $(STATIC_LIBSECCOMP_DIR)/kata-gperf
 
 # Skopeo package packages are available in RHEL/CentOS 8 or later and Ubuntu 20.10 or later
